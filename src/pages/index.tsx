@@ -1,4 +1,5 @@
 import Button from "@/components/button";
+import { Title } from "@/components/title";
 import { useState } from "react";
 
 export default function Home() {
@@ -8,7 +9,11 @@ export default function Home() {
   }
   return (
     <>
-      <Button label="teste"  onClick={() => setTeste(!teste)} error={teste}/>
+      <Button label="minha playlist"  onClick={() => setTeste(!teste)} error={teste}/>
+      <Title 
+         title={'PLAYLIST DA MINHA CIDADE'} 
+         subTitle={'Bem vindo, vamos buscar qual playlist ideal pra sua cidade'} 
+      />
     </>
   )
 }

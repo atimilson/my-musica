@@ -1,3 +1,5 @@
+import { ButtonStyled } from "./style"
+
 interface ButtonProps {
     label: string
     onClick: () => void
@@ -7,10 +9,10 @@ interface ButtonProps {
 export default function Button(props: ButtonProps) {
     return (
         <>
-            <button 
+            <ButtonStyled 
                 onClick={props.onClick}
             >{props.label}
-            </button>
+            </ButtonStyled>
             {props.error && (<small>erro no botão</small>)}
         </>
     )
