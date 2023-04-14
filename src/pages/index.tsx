@@ -1,4 +1,5 @@
 import Button from "@/components/button";
+import { Search } from "@/components/search";
 import { Title } from "@/components/title";
 import { useState } from "react";
 
@@ -14,6 +15,7 @@ export default function Home() {
          title={'PLAYLIST DA MINHA CIDADE'} 
          subTitle={'Bem vindo, vamos buscar qual playlist ideal pra sua cidade'} 
       />
+      <Search />
     </>
   )
 }
