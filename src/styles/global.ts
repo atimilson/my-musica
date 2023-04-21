@@ -2,6 +2,7 @@ import { createGlobalStyle } from "styled-components"
 
 
 export const GlobalStyle = createGlobalStyle`
+
 :root{
    --foreground-rgb: 255, 255, 255;
 }

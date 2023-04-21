@@ -8,7 +8,7 @@ interface ButtonProps {
 
 export default function Button(props: ButtonProps) {
     return (
-        <>
+        <>           
             <ButtonStyled 
                 onClick={props.onClick}
             >{props.label}
