@@ -1,10 +1,10 @@
 import { WeatherApi, shazamApi } from "@/services/api";
 import { createContext, useContext, useState } from "react";
-import { WeatherApiProps } from "./props";
+import { ShazamApiProps, WeatherApiProps } from "./props";
 
 const initValor = {
     city: '',
-    temp: '',
+    temp: 0,
     playlist: []
 }
 
@@ -12,16 +12,18 @@ interface SideMenuProps {
     children: JSX.Element
 }
 
-interface SideMenuContextProps {
-    data: {
+interface WhtherDataProps {    
         city: string
-        temp: string
+        temp: number
         playlist: {
             name: string
             author: string
             img: string
-        }[]
-    },
+        }[]   
+}
+
+interface SideMenuContextProps {
+    data: WhtherDataProps
     loading: boolean
     getWatherData: (inputValue: string) => void
 }
@@ -30,9 +32,10 @@ const SideMenuContext = createContext({} as SideMenuContextProps)
 
 export const SideMenuProvider = (props: SideMenuProps) => {
     const [loading, setLoading] = useState(false);
+    const [dataWheather , setDataWheather] = useState<WhtherDataProps>(initValor);
 
     async function getShazamPlaylist(playlistType: 'classic' | 'pop' | 'rock') {
-        const data = await shazamApi.get('search', {
+        return await shazamApi.get<ShazamApiProps>('search', {
             params: {
                 term: playlistType
             }
@@ -40,13 +43,13 @@ export const SideMenuProvider = (props: SideMenuProps) => {
     }
     const methods = {
         classic: async () => {
-            await getShazamPlaylist('classic')
+            return await getShazamPlaylist('classic')
         },
         pop: async () => {
-            await getShazamPlaylist('pop')
+            return await getShazamPlaylist('pop')
         },
         rock: async () => {
-            await getShazamPlaylist('rock')
+            return  await getShazamPlaylist('rock')
         },
     }
     async function getWatherData(inputValue: string) {
@@ -60,17 +63,49 @@ export const SideMenuProvider = (props: SideMenuProps) => {
             });
             console.log(data)
             if (data.data.main.temp < 15) {
-                const data = await methods.classic()
-                console.log(data)
+                const ShazamResponse = await methods.classic()
+                setDataWheather({ 
+                    temp : data.data.main.temp , 
+                    city: data.data.name ,
+                    playlist : ShazamResponse.data.tracks.hits.map(track =>{
+                        return {
+                            name : track.track.title,
+                            author : track.track.subtitle,
+                            img : track.track.images.background
+                        }
+                    })
+                })
+                
                 return
             }
             if (data.data.main.temp < 30) {
-                const data = await methods.pop()
-                console.log(data)
+                const ShazamResponse = await methods.pop()
+                setDataWheather({ 
+                    temp : data.data.main.temp , 
+                    city: data.data.name ,
+                    playlist : ShazamResponse.data.tracks.hits.map(track =>{
+                        return {
+                            name : track.track.title,
+                            author : track.track.subtitle,
+                            img : track.track.images.background
+                        }
+                    })
+                })
                 return
             }
-            const rock = await methods.rock()
-            console.log(rock)
+
+            const ShazamResponse = await methods.rock()
+            setDataWheather({ 
+                temp : data.data.main.temp , 
+                city: data.data.name ,
+                playlist : ShazamResponse.data.tracks.hits.map(track =>{
+                    return {
+                        name : track.track.title,
+                        author : track.track.subtitle,
+                        img : track.track.images.background
+                    }
+                })
+            })
 
 
         } catch (error) {
@@ -82,7 +117,7 @@ export const SideMenuProvider = (props: SideMenuProps) => {
     }
     return (
         <SideMenuContext.Provider value={{
-            data: initValor, loading, getWatherData
+            data: dataWheather, loading, getWatherData
         }}>
             {props.children}
         </SideMenuContext.Provider>
