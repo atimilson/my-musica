@@ -8,14 +8,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <SideMenuProvider>
       <>
         <GlobalStyle />
-        <div className='
-          px-4 
-          w-full
-          md:px-wrapperSidePadding 
-          lg:px-[90px]
-          pt-[29px]'>
-          <Component {...pageProps} />
-        </div>
+        <Component {...pageProps} />
       </>
     </SideMenuProvider>
   )

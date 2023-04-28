@@ -5,6 +5,7 @@ import { ShazamApiProps, WeatherApiProps } from "./props";
 const initValor = {
     city: '',
     temp: 0,
+    date: null,
     playlist: []
 }
 
@@ -12,17 +13,19 @@ interface SideMenuProps {
     children: JSX.Element
 }
 
-interface WhtherDataProps {    
-        city: string
-        temp: number
-        playlist: {
-            name: string
-            author: string
-            img: string
-        }[]   
+export interface WhtherDataProps {
+    city: string
+    temp: number
+    date: Date | null
+    playlist: {
+        name: string
+        author: string
+        img: string
+    }[]
 }
 
 interface SideMenuContextProps {
+    clearWethwerDta: () => void
     data: WhtherDataProps
     loading: boolean
     getWatherData: (inputValue: string) => void
@@ -32,7 +35,7 @@ const SideMenuContext = createContext({} as SideMenuContextProps)
 
 export const SideMenuProvider = (props: SideMenuProps) => {
     const [loading, setLoading] = useState(false);
-    const [dataWheather , setDataWheather] = useState<WhtherDataProps>(initValor);
+    const [dataWheather, setDataWheather] = useState<WhtherDataProps>(initValor);
 
     async function getShazamPlaylist(playlistType: 'classic' | 'pop' | 'rock') {
         return await shazamApi.get<ShazamApiProps>('search', {
@@ -49,7 +52,7 @@ export const SideMenuProvider = (props: SideMenuProps) => {
             return await getShazamPlaylist('pop')
         },
         rock: async () => {
-            return  await getShazamPlaylist('rock')
+            return await getShazamPlaylist('rock')
         },
     }
     async function getWatherData(inputValue: string) {
@@ -64,30 +67,32 @@ export const SideMenuProvider = (props: SideMenuProps) => {
             console.log(data)
             if (data.data.main.temp < 15) {
                 const ShazamResponse = await methods.classic()
-                setDataWheather({ 
-                    temp : data.data.main.temp , 
-                    city: data.data.name ,
-                    playlist : ShazamResponse.data.tracks.hits.map(track =>{
+                setDataWheather({
+                    temp: data.data.main.temp,
+                    city: data.data.name,
+                    date: new Date(),
+                    playlist: ShazamResponse.data.tracks.hits.map(track => {
                         return {
-                            name : track.track.title,
-                            author : track.track.subtitle,
-                            img : track.track.images.background
+                            name: track.track.title,
+                            author: track.track.subtitle,
+                            img: track.track.images.background
                         }
                     })
                 })
-                
+
                 return
             }
             if (data.data.main.temp < 30) {
                 const ShazamResponse = await methods.pop()
-                setDataWheather({ 
-                    temp : data.data.main.temp , 
-                    city: data.data.name ,
-                    playlist : ShazamResponse.data.tracks.hits.map(track =>{
+                setDataWheather({
+                    temp: data.data.main.temp,
+                    city: data.data.name,
+                    date: new Date(),
+                    playlist: ShazamResponse.data.tracks.hits.map(track => {
                         return {
-                            name : track.track.title,
-                            author : track.track.subtitle,
-                            img : track.track.images.background
+                            name: track.track.title,
+                            author: track.track.subtitle,
+                            img: track.track.images.background
                         }
                     })
                 })
@@ -95,14 +100,15 @@ export const SideMenuProvider = (props: SideMenuProps) => {
             }
 
             const ShazamResponse = await methods.rock()
-            setDataWheather({ 
-                temp : data.data.main.temp , 
-                city: data.data.name ,
-                playlist : ShazamResponse.data.tracks.hits.map(track =>{
+            setDataWheather({
+                temp: data.data.main.temp,
+                city: data.data.name,
+                date: new Date(),
+                playlist: ShazamResponse.data.tracks.hits.map(track => {
                     return {
-                        name : track.track.title,
-                        author : track.track.subtitle,
-                        img : track.track.images.background
+                        name: track.track.title,
+                        author: track.track.subtitle,
+                        img: track.track.images.background
                     }
                 })
             })
@@ -114,10 +120,17 @@ export const SideMenuProvider = (props: SideMenuProps) => {
             setLoading(false)
         }
 
+
+    }
+    function clearWethwerDta() {
+        const confirm = window.confirm('Tem certeza que deseja limpar a lista?')
+        if (confirm) {
+            setDataWheather(initValor)
+        }
     }
     return (
         <SideMenuContext.Provider value={{
-            data: dataWheather, loading, getWatherData
+            data: dataWheather, clearWethwerDta, loading, getWatherData
         }}>
             {props.children}
         </SideMenuContext.Provider>
