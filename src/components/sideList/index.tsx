@@ -7,6 +7,8 @@ import Image from "next/image";
 
 interface SideListProps extends WhtherDataProps {
  onPress: () => void
+ onSaveList?: ()=> void
+ 
 }
 
 export function SideList(props: SideListProps) {
@@ -32,11 +34,12 @@ export function SideList(props: SideListProps) {
               </p>
               <h1 className="font-bold text-[40px] mt-[-14px]">{props.temp} °</h1>
             </div>
-            <div className="mt-[-14px]">
+
+            {props.onSaveList && <div className="mt-[-14px]">
               <Button
-                label="minha playlist" onClick={() => console.log()} error={false}
+                label="Salvar playlist" onClick={props.onSaveList} error={false}
               />
-            </div>
+            </div>}
           </div>
 
 
