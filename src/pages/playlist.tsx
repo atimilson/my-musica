@@ -21,7 +21,9 @@ const Playlist = (props: any) => {
                     subTitle={'minhas listas salvas'}
                 />                
             </div>
-            <SideList onPress={console.log}  {...props.data} date={new Date(String(props.data.date))} />
+            <SideList onPress={console.log} onSaveList={console.log}  
+            {...props.data} date={new Date(String(props.data.date))} 
+            displayInline={true} />
         </div>
     )
 }
