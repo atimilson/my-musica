@@ -5,27 +5,38 @@ import { Title } from "@/components/title";
 import { useSideMenu } from "@/context/sideMenuContext";
 import Image from "next/image";
 import { userAgentFromString } from "next/server";
+import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
+import nookie from 'nookies'
 
 export default function Home() {
   const { data, getWatherData, loading, clearWethwerDta } = useSideMenu()
-  const [teste, setTeste] = useState(false)
+  const [teste, setTeste] = useState(false);
+  const router = useRouter()
+
   function redirectPage() {
-    alert('ir para outra pagina')
+    router.push('/playlist')
   }
 
-  useEffect(() => {
-    console.log(data.playlist.length)
-    console.log(data)
-  }, [data])
+  // useEffect(() => {
+  //   console.log(data.playlist.length)
+  //   console.log(data)
+  // }, [data])
+
+
+  function saveListInCookie(){
+    nookie.set(null, 'playlist', JSON.stringify(data))
+    alert('Playlist salva!!')
+  }
 
 
   const showSideList = Boolean(data.playlist.length)
 
   return (
     <div className={`
-       w-full        
-        ${showSideList && 'bg-primary md:bg-white md:flex md:flex-row md:pt-0 md:px-0'}
+       w-full     
+       bg-gray-700   
+        ${showSideList && 'md:flex md:flex-row md:pt-0 md:px-0'}
         `}
     >
       <div className="
@@ -38,7 +49,7 @@ export default function Home() {
         <div className={` ${data.playlist.length ? 'hidden md:block md:px-[10px]' : ''}
             w-full md:max-w-[114px]`}>
           <Button
-            label="minha playlist" onClick={() => setTeste(!teste)} error={teste}
+            label="minha playlist" onClick={redirectPage} error={teste}
           />
         </div>
         <div className={`${data.playlist.length ? 'hidden md:block md:px-[10px] ' : 'md:px-[80px] lg:px-[150px] '} 
@@ -58,7 +69,7 @@ export default function Home() {
         </div>
       </div>
 
-      {showSideList && <SideList {...data} onPress={clearWethwerDta} />}
+      {showSideList && <SideList {...data} onSaveList={saveListInCookie} onPress={clearWethwerDta} />}
 
     </div>
   )

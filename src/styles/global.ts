@@ -7,7 +7,7 @@ export const GlobalStyle = createGlobalStyle`
    --foreground-rgb: 255, 255, 255;
 }
  body{
-    background:  #d5d5d5;
+    background:  #374151;
     margin : 0;
     padding:  0;
  }
