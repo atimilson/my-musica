@@ -16,7 +16,7 @@ export function Search(props: SearchProps) {
         <div className='flex flex-row justify-between bg-primary min-h-[54px]
          rounded-lg pr-10'>
             <input
-                className='flex flex-1 bg-transparent text-white focus:outline-none
+                className='flex flex-1 bg-transparent text-white focus:outline-none 
                 text-[14px] px-10'
                 type="text" id="searchInput" value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
