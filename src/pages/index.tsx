@@ -25,8 +25,12 @@ export default function Home() {
 
 
   function saveListInCookie(){
-    nookie.set(null, 'playlist', JSON.stringify(data))
-    alert('Playlist salva!!')
+    const playlistSaved = nookie.get(null, 'playlist').playlist || JSON.stringify([])
+    const dataTreated =  JSON.stringify([...JSON.parse(playlistSaved), data])
+    nookie.set(null, 'playlist', dataTreated)
+      alert('Playlist salva!!')
+      return
+   
   }
 
 
